@@ -1,14 +1,16 @@
 let sound;
-let lastOrientation = null;
+let alpha = 0; // Rotación alrededor del eje Z (compás)
+let beta = 0;  // Rotación alrededor del eje X (inclinación adelante-atrás)
+let gamma = 0; // Rotación alrededor del eje Y (inclinación izquierda-derecha)
 
 function preload() {
-  // Carga un archivo de sonido (debe estar en la misma carpeta o usar una URL)
   sound = loadSound('Ritmo Muisca.mp3');
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  // Solicita permiso para acceder al giroscopio
+  textAlign(LEFT, TOP);
+  textSize(16);
   if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) {
     DeviceOrientationEvent.requestPermission()
       .then(response => {
@@ -18,24 +20,32 @@ function setup() {
       })
       .catch(console.error);
   } else {
-    // Para navegadores antiguos o iOS sin permiso
     window.addEventListener('deviceorientation', onOrientationChange);
   }
 }
 
 function draw() {
   background(220);
-  // Muestra la orientación actual
-  textAlign(CENTER, CENTER);
-  textSize(24);
-  text('Orientación: ' + deviceOrientation, width/2, height/2);
+  // Muestra los ángulos actuales
+  text(`Alpha: ${alpha.toFixed(2)}°`, 20, 20);
+  text(`Beta: ${beta.toFixed(2)}°`, 20, 50);
+  text(`Gamma: ${gamma.toFixed(2)}°`, 20, 80);
+
+  // Reproduce o detiene el sonido según los ángulos
+  if (alpha > 90 || beta > 90 || gamma > 90) {
+    if (!sound.isPlaying()) {
+      sound.play();
+    }
+  } else {
+    if (sound.isPlaying()) {
+      sound.stop();
+    }
+  }
 }
 
 function onOrientationChange(event) {
-  // Detecta cambios en la orientación
-  const currentOrientation = deviceOrientation;
-  if (lastOrientation !== currentOrientation && sound.isPlaying() === false) {
-    sound.play();
-  }
-  lastOrientation = currentOrientation;
+  alpha = event.alpha || 0;
+  beta = event.beta || 0;
+  gamma = event.gamma || 0;
 }
+
