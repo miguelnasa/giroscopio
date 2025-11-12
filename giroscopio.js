@@ -3,7 +3,7 @@ let lastOrientation = null;
 
 function preload() {
   // Carga un archivo de sonido (debe estar en la misma carpeta o usar una URL)
-  sound = loadSound('tu_sonido.mp3');
+  sound = loadSound('Ritmo Muisca.mp3');
 }
 
 function setup() {
