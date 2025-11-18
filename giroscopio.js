@@ -32,7 +32,7 @@ function draw() {
   text(`Gamma: ${gamma.toFixed(2)}°`, 20, 80);
 
   // Reproduce o detiene el sonido según los ángulos
-  if (alpha > 90 || beta > 90 || gamma > 90) {
+  if (alpha > 90) {
     if (!sound.isPlaying()) {
       sound.play();
     }
